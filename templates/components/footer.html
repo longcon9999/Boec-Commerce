@@ -10,8 +10,8 @@
                 <div class="footer">
                     <!-- footer logo -->
                     <div class="footer-logo">
-                        <a class="logo" href="#">
-                            <img src="{% static 'img/logo.png'%}" alt="">
+                        <a class="logo" href="/">
+                            <img src="{% static '/img/logo.png' %}" alt="">
                         </a>
                     </div>
                     <!-- /footer logo -->
@@ -20,11 +20,11 @@
 
                     <!-- footer social -->
                     <ul class="footer-social" >
-                        <li><a style="color: #fff;" href="#"><i  class="fa fa-facebook"></i></a></li>
-                        <li><a style="color: #fff;" href="#"><i class="fa fa-twitter"></i></a></li>
-                        <li><a style="color: #fff;" href="#"><i class="fa fa-instagram"></i></a></li>
-                        <li><a style="color: #fff;" href="#"><i class="fa fa-google-plus"></i></a></li>
-                        <li><a style="color: #fff;" href="#"><i class="fa fa-pinterest"></i></a></li>
+                        <li><a style="color: #fff;" href="https://www.facebook.com/longvodoi.nguyenhuu" target="_blank"><i  class="fa fa-facebook"></i></a></li>
+                        <li><a style="color: #fff;" href="https://twitter.com/HajimeKindaich5" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                        <li><a style="color: #fff;" href="https://www.instagram.com/longcon99/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                        <li><a style="color: #fff;" href="mailto:longcon9999@gmail.com" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                        <li><a style="color: #fff;" href="https://www.pinterest.com/kindaichideal/" target="_blank"><i class="fa fa-pinterest"></i></a></li>
                     </ul>
                     <!-- /footer social -->
                 </div>
@@ -35,13 +35,26 @@
             <div class="col-md-3 col-sm-6 col-xs-6">
                 <div class="footer">
                     <h3 class="footer-header" style="color:#fff">My Account</h3>
+                    {% if user.id %}
                     <ul class="list-links">
-                        <li><a style="color:#fff" href="#">My Account</a></li>
-                        <li><a style="color:#fff" href="#">My Wishlist</a></li>
-                        <li><a style="color:#fff" href="#">Compare</a></li>
-                        <li><a style="color:#fff" href="#">Checkout</a></li>
-                        <li><a style="color:#fff" href="#">Login</a></li>
+                        {% if user.is_staff is True %}
+                            <li><a style="color:#fff" href="{% url 'user_index' %}">My Account</a></li>
+                            <li><a style="color:#fff" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        {% else %}
+                            <li><a style="color:#fff" href="{% url 'user_index' %}">My Account</a></li>
+                            <li><a style="color:#fff" href="{% url 'shopcart' %}">Cart</a></li>
+                            <li><a style="color:#fff" href="{% url 'user_orders' %}">My Orders</a></li>
+                            <li><a style="color:#fff" href="{% url 'user_comments' %}">My Comments</a></li>
+                            <li><a style="color:#fff" href="{% url 'logout' %}">Logout</a>
+                            </li>
+                        {% endif %}
                     </ul>
+                    {% else %}
+                    <ul class="list-links">         
+                        <li><a style="color:#fff" href="{% url 'login' %}">Login</a></li>
+                    </ul>
+                    {% endif %}
                 </div>
             </div>
             <!-- /footer widget -->
@@ -53,7 +66,7 @@
                 <div class="footer" >
                     <h3 class="footer-header" style="color:#fff">Customer Service</h3>
                     <ul class="list-links" >
-                        <li><a style="color:#fff" href="#">About Us</a></li>
+                        <li><a style="color:#fff" href="{% url 'contactus' %}">Contact Us</a></li>
                         <li><a style="color:#fff" href="#">Shiping & Return</a></li>
                         <li><a style="color:#fff" href="#">Shiping Guide</a></li>
                         <li><a style="color:#fff" href="#">FAQ</a></li>
@@ -67,9 +80,9 @@
                 <div class="footer">
                     <h3 class="footer-header">Stay Connected</h3>
                     <p>Join with us now.</p>
-                    <form>
+                    <form action="/signup" method="GET">
                         <div class="form-group">
-                            <input class="input" placeholder="Enter Email Address">
+                            <input class="input" placeholder="Enter Email Address" name="register_email">
                         </div>
                         <button class="primary-btn">Join Newslatter</button>
                     </form>
@@ -84,9 +97,7 @@
             <div class="col-md-8 col-md-offset-2 text-center">
                 <!-- footer copyright -->
                 <div class="footer-copyright">
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    BOEC 
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    <p style="text-align: center"> Copyright &copy; <script>document.write(new Date().getFullYear())</script> Katy Craft All Rights Reserved</p>
                 </div>
                 <!-- /footer copyright -->
             </div>

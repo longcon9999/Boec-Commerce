@@ -20,6 +20,8 @@ def index(request):
 def addtoshopcart(request, id):
     url = request.META.get('HTTP_REFERER')  # get last url
     current_user = request.user  # Access User Session information
+    if current_user.is_staff is True:
+        return HttpResponse('You can not do this action.')
     product = Product.objects.get(pk=id)
     if product.amount == 0:
         messages.success(request, "Product Out of Stock! Sorry!")
@@ -84,17 +86,34 @@ def addtoshopcart(request, id):
 def shopcart(request):
     categories = Category.objects.all()
     current_user = request.user  # Access User Session information
+    if current_user.is_staff is True:
+        return HttpResponse('You are not authorized to view this page.')
     shopcart = ShopCart.objects.filter(user_id=current_user.id)
     total = 0
     for rs in shopcart:
-        product = Product.objects.get(pk=rs.product.id)
-        if rs.quantity > product.amount:
-            rs.quantity = product.amount
-        rs.save()
         if rs.variant is None:
-            total += rs.product.price * rs.quantity
+            product = Product.objects.get(pk=rs.product.id)
+            if rs.quantity > product.amount:
+                rs.quantity = product.amount
+            try:
+                if rs.product.promotion:
+                    rs.product.price = round(rs.product.pricepromotion(),2)
+                    rs.amount = rs.product.price * rs.quantity
+                    total += rs.amount
+            except:
+                total += rs.product.price * rs.quantity
         else:
-            total += rs.variant.price * rs.quantity
+            variant = Variants.objects.get(pk=rs.variant.id)
+            if rs.quantity > variant.quantity:
+                rs.quantity = variant.quantity
+            try:
+                if rs.product.promotion:
+                    rs.variant.price = round(rs.variant.price * (100 - rs.product.promotion.percent) / 100, 2)
+                    rs.varamount = rs.variant.price * rs.quantity
+                    total += rs.varamount
+            except:
+                total += rs.variant.price * rs.quantity
+        rs.save()
 
     context = {'shopcart': shopcart,
                'categories': categories,
@@ -117,11 +136,29 @@ def orderproduct(request):
     shopcart = ShopCart.objects.filter(user_id=current_user.id)
     total = 0
     for rs in shopcart:
-        print(rs.quantity)
-        if rs.product.variant == 'None':
-            total += rs.product.price * rs.quantity
+        if rs.variant is None:
+            product = Product.objects.get(pk=rs.product.id)
+            if rs.quantity > product.amount:
+                rs.quantity = product.amount
+            try:
+                if rs.product.promotion:
+                    rs.product.price = round(rs.product.pricepromotion(), 2)
+                    rs.amount = rs.product.price * rs.quantity
+                    total += rs.amount
+            except:
+                total += rs.product.price * rs.quantity
         else:
-            total += rs.variant.price * rs.quantity
+            variant = Variants.objects.get(pk=rs.variant.id)
+            if rs.quantity > variant.quantity:
+                rs.quantity = variant.quantity
+            try:
+                if rs.product.promotion:
+                    rs.variant.price = round(rs.variant.price * (100 - rs.product.promotion.percent) / 100, 2)
+                    rs.varamount = rs.variant.price * rs.quantity
+                    total += rs.varamount
+            except:
+                total += rs.variant.price * rs.quantity
+        rs.save()
 
     if request.method == 'POST':  # if there is a post
         form = OrderForm(request.POST)
@@ -150,10 +187,13 @@ def orderproduct(request):
                 detail.product_id = rs.product_id
                 detail.user_id = current_user.id
                 detail.quantity = rs.quantity
+
                 if rs.product.variant == 'None':
                     detail.price = rs.product.price
                 else:
                     detail.price = rs.variant.price
+
+
                 detail.variant_id = rs.variant_id
                 detail.amount = rs.amount
                 detail.save()

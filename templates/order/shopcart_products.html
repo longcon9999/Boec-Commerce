@@ -50,24 +50,29 @@
                                     {% endif %}
 
                                 </td>
+                                
                                 <td class="details">
                                     <a href="/product/{{ rs.product.id }}/{{ rs.product.slug }}">{{rs.product}}
                                         {{ rs.variant.size }} {{ rs.variant.color }}</a> </td>
+                                        
                                 <td class="price text-center"><strong>
                                         {% if rs.product.variant == 'None' %}
-                                        {{ rs.product.price }}
+                                        ${{ rs.product.price}}
                                         {% else %}
-                                        {{ rs.variant.price }}
+                                        ${{ rs.variant.price}}
                                         {% endif %}
                                     </strong></td>
+                                    
                                 <td class="qty text-center"><strong>{{rs.quantity}}</strong></td>
-                                <td class="total text-center"><strong class="primary-color">$
+                                
+                                <td class="total text-center"><strong class="primary-color">
                                         {% if rs.product.variant is None %}
-                                        {{ rs.amount }}
+                                        ${{ rs.amount }}
                                         {% else %}
-                                        {{ rs.varamount }}
+                                        ${{ rs.varamount }}
                                         {% endif %}
                                     </strong></td>
+                                    
                                 <td class="text-right"><a href="/order/deletefromcart/{{ rs.id }}"
                                         onclick="return confirm('Delete ! Are you sure?')" class="main-btn icon-btn"><i
                                             class="fa fa-close"></i></a></td>
@@ -80,7 +85,7 @@
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>SUBTOTAL</th>
-                                <th colspan="2" class="sub-total">${{ total  }}</th>
+                                <th colspan="2" class="sub-total">${{ total }}</th>
                             </tr>
                             <tr>
                                 <th class="empty" colspan="3"></th>

@@ -1,0 +1,81 @@
+<!-- section -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <div class="section-title">
+            <h3 class="title">Shop</h3>
+        </div>
+        <!-- row -->
+        <div class="row" style="justify-content: start; display: flex; flex-wrap: wrap;">
+            <!-- section title -->
+            {% for rs in page_obj %}
+            <!-- Product Single -->
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="product product-single">
+                    <div class="product-thumb" style="width: 100%; height: 300px;">
+                        <img src="{{ rs.image.url }}" alt="" style="width: 100%;">
+                    </div>
+                    <div class="product-body">
+                        {% if rs.variant == 'None' %}
+                        {% if rs.promotion %}
+                        <h3 class="product-price">${{ rs.pricepromotion }}</h3>
+                        <h6 class="product-price"><del>${{ rs.price }}</del></h6>
+                        {% else %}
+                        <h3 class="product-price">${{ rs.price }}</h3>
+                        {% endif %}
+                        {% endif %}
+                        <div class="product-rating">
+                            <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 3%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 4%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 5%}-o empty{% endif%}"></i>
+                            {{ rs.avaregereview}}/{{ rs.countreview}}
+
+                        </div>
+                        <h2 class="product-name"><a href="{% url 'product_detail' rs.id rs.slug %}">{{ rs.title }}</a>
+                        </h2>
+                        <div class="product-btns">
+                            <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+                            <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
+                            {% if rs.variant == 'None'%}
+                            <a href="/order/addtoshopcart/{{ rs.id }}" class="primary-btn add-to-cart"><i
+                                    class="fa fa-shopping-cart"></i> Add to Cart</a>
+                            {% else %}
+                            <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
+                                    class="fa fa-shopping-cart"></i> Detail</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Product Single -->
+            {% endfor %}
+        </div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">&laquo; First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                <li class="page-item"><span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span></li>
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+    </div>
+</div>

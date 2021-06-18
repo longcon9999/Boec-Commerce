@@ -4,9 +4,39 @@
 <div class="section">
     <!-- container -->
     <div class="container">
+        <div class="col-md-12"></div>
         <!-- row -->
+        
+        <div class="row" style="display: flex;justify-content: center;">
+            {% for cate in categories %}
+            <!-- Product Single -->
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="product product-single" style="position: relative;">
+                    <div class="product-thumb" style="width: 100%; height: 300px;">
+                        <img src="{{cate.image.url}}" alt="" style="width: 100%;">
+                    </div>
+                    <div class="product-body" style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    text-align: center;">
+                        <div class="product-btns" style="width: 150px;">
+                            <a href="{% url 'category_products' cate.id %}" class="primary-btn add-to-cart">{{cate.title}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Product Single -->
+            {% endfor %}
+        </div>
+        
+        <div class="col-md-12">
+            <div class="section-title">
+                <h2 class="title">Latest</h2>
+            </div>
+        </div>
         <div class="row">
-            
             <!-- section title -->
             {% for rs in products_latest %}
             <!-- Product Single -->
@@ -16,7 +46,15 @@
                         <img src="{{ rs.image.url }}" alt="" style="width: 100%;">
                     </div>
                     <div class="product-body">
-                        <h3 class="product-price">${{ rs.price }}</h3>
+                        {% if rs.variant == 'None' %}
+                            {% if rs.promotion %}
+                                <h3 class="product-price">${{ rs.pricepromotion|floatformat:'0' }}</h3>
+                                <h6 class="product-price"><del>${{ rs.price }}</del></h6>
+                            {% else %}
+                                <h3 class="product-price">${{ rs.price }}</h3>
+                            {% endif %}
+                        {% endif %}
+                        
                         <div class="product-rating">
                             <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
                             <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
@@ -43,11 +81,8 @@
             </div>
             <!-- /Product Single -->
             {% endfor %}
-
         </div>
         <!-- /row -->
-
-
         <!-- row -->
         <div class="row">
             <!-- section title -->
@@ -67,7 +102,14 @@
                         <img src="{{ rs.image.url }}" alt="" style="width: 100%;">
                     </div>
                     <div class="product-body">
-                        <h3 class="product-price">${{ rs.price }} </h3>
+                        {% if rs.variant == 'None' %}
+                            {% if rs.promotion %}
+                                <h3 class="product-price">${{ rs.pricepromotion|floatformat:'0' }}</h3>
+                                <h6 class="product-price"><del>${{ rs.price }}</del></h6>
+                            {% else %}
+                                <h3 class="product-price">${{ rs.price }}</h3>
+                            {% endif %}
+                        {% endif %}
                         <div class="product-rating">
                             <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
                             <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
@@ -95,6 +137,62 @@
             {% endfor %}
         </div>
         <!-- /row -->
+        {% if products_bought %}
+        <!-- row -->
+        <div class="row">
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2 class="title">Buy Again</h2>
+                </div>
+            </div>
+            <!-- section title -->
+
+            <!-- section title -->
+            {% for rs in products_bought %}
+            <!-- Product Single -->
+            <div class="col-md-3 col-sm-6 col-xs-6">
+                <div class="product product-single">
+                    <div class="product-thumb" style="width: 100%; height: 300px;">
+                        <img src="{{ rs.image.url }}" alt="" style="width: 100%;">
+                    </div>
+                    <div class="product-body">
+                        {% if rs.variant == 'None' %}
+                            {% if rs.promotion %}
+                                <h3 class="product-price">${{ rs.pricepromotion|floatformat:'0' }}</h3>
+                                <h6 class="product-price"><del>${{ rs.price }}</del></h6>
+                            {% else %}
+                                <h3 class="product-price">${{ rs.price }}</h3>
+                            {% endif %}
+                        {% endif %}
+                        <div class="product-rating">
+                            <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 3%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 4%}-o empty{% endif%}"></i>
+                            <i class="fa fa-star{% if rs.avaregereview < 5%}-o empty{% endif%}"></i>
+                            {{ rs.avaregereview}}/{{ rs.countreview}}
+                        </div>
+                        <h2 class="product-name"><a href="{% url 'product_detail' rs.id rs.slug %}">{{ rs.title }}</a></h2>
+                        <div class="product-btns">
+                            <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
+                            <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
+                            {% if rs.variant == 'None'%}
+                            <a href="{% url 'addtoshopcart' rs.id %}" class="primary-btn add-to-cart"><i
+                                    class="fa fa-shopping-cart"></i> Add to Cart</a>
+                            {% else %}
+                            <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
+                                    class="fa fa-shopping-cart"></i> Detail</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Product Single -->
+            {% endfor %}
+        </div>
+        <!-- /row -->
+        {% endif %}
     </div>
     <!-- /container -->
 </div>

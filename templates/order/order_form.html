@@ -58,8 +58,8 @@
                         <div class="section-title">
                             <h4 class="title">Payment Information</h4>
                         </div>
-                        <p><label for="id_first_name">Total: {{ total }} USD </label>
-                            <input type="text" name="total" class="input" readonly value="{{ total }} USD">
+                        <p><label for="id_first_name">Total: ${{ total|floatformat:'2'  }} </label>
+                            <input type="text" name="total" class="input" readonly value="${{ total|floatformat:'2' }}">
                         </p>
                         <p><label for="id_first_name">Credit Card Holder</label>
                             <input type="text" name="holder" class="input" value="" required></p>
@@ -105,19 +105,19 @@
                                 <td class="details">
                                     <a href="/product/{{ rs.product.id }}/{{ rs.product.slug }}">{{rs.product}}
                                         {{ rs.variant.size }} {{ rs.variant.color }}</a> </td>
-                                <td class="price text-center"><strong>$
+                                <td class="price text-center"><strong>
                                         {% if rs.product.variant == 'None' %}
-                                        {{ rs.product.price }}
+                                        ${{ rs.product.price}}
                                         {% else %}
-                                        {{ rs.variant.price }}
+                                        ${{ rs.variant.price}}
                                         {% endif %}
                                     </strong></td>
                                 <td class="qty text-center"><strong>{{rs.quantity}}</strong></td>
-                                <td class="total text-center"><strong class="primary-color">$
+                                <td class="total text-center"><strong class="primary-color">
                                         {% if rs.product.variant == 'None' %}
-                                        {{ rs.amount }}
+                                        ${{ rs.amount }}
                                         {% else %}
-                                        {{ rs.varamount }}
+                                        ${{ rs.varamount }}
                                         {% endif %}
                                     </strong></td>
                                 <td class="text-right"><a href="/order/deletefromcart/{{ rs.id }}"
@@ -132,7 +132,7 @@
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>SUBTOTAL</th>
-                                <th colspan="2" class="sub-total">{{ total }} USD</th>
+                                <th colspan="2" class="sub-total">${{ total }}</th>
                             </tr>
                             <tr>
                                 <th class="empty" colspan="3"></th>
@@ -142,7 +142,7 @@
                             <tr>
                                 <th class="empty" colspan="3"></th>
                                 <th>TOTAL</th>
-                                <th colspan="2" class="total">{{ total }} USD</th>
+                                <th colspan="2" class="total">${{ total }}</th>
                             </tr>
                         </tfoot>
                     </table>

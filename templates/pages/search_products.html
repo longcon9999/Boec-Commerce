@@ -96,14 +96,24 @@
                                             <td class="details"> <a style="margin: auto 10px;"
                                                     href="/category/{{ rs.category_id }}">{{ rs.category }}</a>
                                             </td>
+                                            
                                             <td class="price text-center">
-                                                <strong>$ {{ rs.price }}</strong></td>
+                                                {% if rs.variant == "None" %}
+                                                <strong>${{ rs.price }}</strong>{% endif %}</td>
+                                            
                                             <td class="qty text-center"><input class="input" type="number" value="1" style="width: 75px; margin: auto 20px;">
                                             </td>
 
-                                            <td class="text-right"  style="width: 150px;"><a style="border-radius: 10px" href="/order/addtoshopcart/{{ rs.id }}"
+                                            <td class="text-right"  style="width: 150px;">
+                                                {% if rs.variant == "None" %}
+                                                    <a style="border-radius: 10px" href="/order/addtoshopcart/{{ rs.id }}"
                                                     class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i>
-                                                    Add to Cart</a></td>
+                                                    Add to Cart</a>
+                                                {% else %}
+                                                    <a style="border-radius: 10px" href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
+                                                    class="fa fa-shopping-cart"></i> Detail</a>
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                         {% endfor %}
 

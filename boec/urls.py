@@ -44,6 +44,7 @@ urlpatterns = [
     path('logout/', UserViews.logout_func, name='logout'),
     path('signup/', UserViews.signup_form, name='signup'),
     path('ajaxcolor/', views.ajaxcolor, name='ajaxcolor'),
+    path('shop/', views.shoppage, name='shoppage'),
 ]
 
 

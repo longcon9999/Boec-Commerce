@@ -198,7 +198,6 @@
                 <div id="store">
                     <!-- row -->
                     <div class="row">
-
                         <div class="col-md-12">
                             <div class="order-summary clearfix">
                                 <div class="section-title">
@@ -206,51 +205,7 @@
                                 </div>
                                 <div class="container">
                                     <!-- row -->
-                                    <div class="row">
-                                
-                                        <!-- section title -->
-                                        {% for rs in products_latest %}
-                                        <!-- Product Single -->
-                                        <div class="col-md-3 col-sm-6 col-xs-6">
-                                            <div class="product product-single">
-                                                <div class="product-thumb" style="width: 100%;">
-                                                    <img src="{{ rs.image.url }}" alt="" style="width: 100%; object-fit: contain;">
-                                                </div>
-                                                <div class="product-body">
-                                                    <h3 class="product-price">${{ rs.price }}</h3>
-                                                    <div class="product-rating">
-                                                        <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
-                                                        <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
-                                                        <i class="fa fa-star{% if rs.avaregereview < 3%}-o empty{% endif%}"></i>
-                                                        <i class="fa fa-star{% if rs.avaregereview < 4%}-o empty{% endif%}"></i>
-                                                        <i class="fa fa-star{% if rs.avaregereview < 5%}-o empty{% endif%}"></i>
-                                                        {{ rs.avaregereview}}/{{ rs.countreview}}
-                                
-                                                    </div>
-                                                    <h2 class="product-name"><a href="{% url 'product_detail' rs.id rs.slug %}">{{ rs.title }}</a></h2>
-                                                    <div class="product-btns">
-                                                        <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
-                                                        <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-                                                        {% if rs.variant == 'None'%}
-                                                        <a href="/order/addtoshopcart/{{ rs.id }}" class="primary-btn add-to-cart"><i
-                                                                class="fa fa-shopping-cart"></i> Add to Cart</a>
-                                                        {% else %}
-                                                        <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
-                                                                class="fa fa-shopping-cart"></i> Detail</a>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- /Product Single -->
-                                        {% endfor %}
-                                
-                                    </div>
-                                    <!-- /row -->
-                                
-                                
-                                    <!-- row -->
-                                    <div class="row">
+                                    <div class="row" style="justify-content: start; display: flex; flex-wrap: wrap;">
                                         <!-- section title -->
                                         {% for rs in products %}
                                         <!-- Product Single -->
@@ -260,7 +215,9 @@
                                                     <img src="{{ rs.image.url }}" alt="" style="width: 100%;">
                                                 </div>
                                                 <div class="product-body">
+                                                    {% if rs.variant == "None" %}
                                                     <h3 class="product-price">${{ rs.price }} </h3>
+                                                    {% endif %}
                                                     <div class="product-rating">
                                                         <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
                                                         <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
@@ -273,11 +230,11 @@
                                                     <div class="product-btns">
                                                         <button class="main-btn icon-btn"><i class="fa fa-heart"></i></button>
                                                         <button class="main-btn icon-btn"><i class="fa fa-exchange"></i></button>
-                                                        {% if rs.variant == 'None'%}
-                                                        <a href="{% url 'addtoshopcart' rs.id %}" class="primary-btn add-to-cart"><i
+                                                        {% if rs.variant == "None" %}
+                                                            <a href="{% url 'addtoshopcart' rs.id %}" class="primary-btn add-to-cart"><i
                                                                 class="fa fa-shopping-cart"></i> Add to Cart</a>
                                                         {% else %}
-                                                        <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
+                                                            <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
                                                                 class="fa fa-shopping-cart"></i> Detail</a>
                                                         {% endif %}
                                                     </div>
@@ -289,51 +246,6 @@
                                     </div>
                                     <!-- /row -->
                                 </div>
-                                <!-- <table class="shopping-cart-table table">
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th style="width: 700px;"></th>
-                                            <th class="text-center">Price</th>
-                                            <th class="text-right"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for rs in products %}
-                                        <tr>
-                                            <td class="thumb"><a href="{% url 'product_detail' rs.id rs.slug %}">
-                                                    <img src="{{ rs.image.url }}" alt="" style="height: 100px">
-                                                </a></td>
-                                            <td class="details"> <a
-                                                    href="{% url 'product_detail' rs.id rs.slug %}">{{ rs.title }}</a>
-                                                    <div class="product-rating">
-                                                        <div class="product-rating-stars">
-                                                            <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
-                                                            <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
-                                                            <i class="fa fa-star{% if rs.avaregereview < 3%}-o empty{% endif%}"></i>
-                                                            <i class="fa fa-star{% if rs.avaregereview < 4%}-o empty{% endif%}"></i>
-                                                            <i class="fa fa-star{% if rs.avaregereview < 5%}-o empty{% endif%}"></i>
-                                                        </div>
-                                                        {{ rs.avaregereview |stringformat:".2f"}}
-                                                    </div>
-                                            </td>
-                                            <td class="price text-center">
-                                                <strong>$ {{ rs.price }}</strong><br></td>
-                                                <td>
-                                                {% if rs.variant == 'None'%}
-                                                <a href="/order/addtoshopcart/{{ rs.id }}" class="primary-btn add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i> Add to Cart</a>
-                                                {% else %}
-                                                <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
-                                                        class="fa fa-shopping-cart"></i> Detail</a>
-                                                {% endif %}</td>
-                                        
-                                        </tr>
-                                        {% endfor %}
-
-                                    </tbody>
-
-                                </table> -->
 
                             </div>
 

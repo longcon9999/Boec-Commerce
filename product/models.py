@@ -50,12 +50,13 @@ class Product(models.Model):
     description = models.TextField(max_length=255)
     image = models.ImageField(upload_to='images/', null=False)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    price_in = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     amount = models.IntegerField(default=0)
     minamount = models.IntegerField(default=3)
     variant = models.CharField(max_length=10, choices=VARIANTS, default='None')
     detail = RichTextUploadingField()
     slug = models.SlugField(null=False, unique=True)
-    status = models.CharField(max_length=10, choices=STATUS)
+    status = models.CharField(max_length=10, choices=STATUS, default='False')
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
@@ -87,6 +88,11 @@ class Product(models.Model):
         if reviews["count"] is not None:
             cnt = int(reviews["count"])
         return cnt
+
+    def pricepromotion(self):
+        if self.promotion:
+            return round(self.price * (100 - self.promotion.percent) / 100, 2)
+
 
 
 class Images(models.Model):
@@ -150,7 +156,8 @@ class Variants(models.Model):
     image_id = models.IntegerField(blank=True, null=True, default=0)
     quantity = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-
+    price_in = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    
     def __str__(self):
         return self.title
 
@@ -168,3 +175,12 @@ class Variants(models.Model):
             return mark_safe('<img src="{}" height="50"/>'.format(img.image.url))
         else:
             return ""
+            
+    def pricepromotion(self):
+        if self.product.promotion:
+            return round(self.price * (100 - self.product.promotion.percent) / 100, 2)
+
+
+class Promotion(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE)
+    percent = models.DecimalField(max_digits=5, decimal_places=2, default=0)

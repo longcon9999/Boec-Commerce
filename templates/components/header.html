@@ -90,14 +90,18 @@
                         <a href="{% url 'login' %}" class="text-uppercase" >Login</a> / <a href="{% url 'signup' %}"
                             class="text-uppercase" >Sign Up</a>
                         {% endif %}
-
                         <ul class="custom-menu" style="color: #fff;">
+                        {% if user.is_staff is True %}
+                            <li><a href="{% url 'user_index' %}"><i class="fa fa-user-o"></i>My Account</a></li>
+                            <li><a href="{% url 'logout' %}"><i class="fa fa-unlock-alt"></i>Logout</a>
+                            </li>
+                        {% else %}
                             <li><a href="{% url 'user_index' %}"><i class="fa fa-user-o"></i>My Account</a></li>
                             <li><a href="{% url 'user_orders' %}"><i class="fa fa-exchange"></i>My Orders</a></li>
                             <li><a href="{% url 'user_comments' %}"><i class="fa fa-check"></i>My Comments</a></li>
                             <li><a href="{% url 'logout' %}"><i class="fa fa-unlock-alt"></i>Logout</a>
                             </li>
-
+                        {% endif %}
                         </ul>
                     </li>
                     <!-- /Account -->

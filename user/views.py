@@ -34,20 +34,19 @@ def login_form(request):
         if user is not None:
             login(request, user)
             current_user = request.user
-            userprofile = UserProfile.objects.get(user_id=current_user.id)
-            request.session['userimage'] = userprofile.image.url
-            group = None
-            if request.user.groups.exists():
-                group = request.user.groups.all()[0].name
-
-            if group == 'warehouse_staff':
-                return HttpResponseRedirect('/warehouse_staff/')
-            elif group == 'sale_staff':
-                return HttpResponseRedirect('/sale_staff/')
-            elif group == 'business_staff':
-                return HttpResponseRedirect('/business_staff/')
-
-            return HttpResponseRedirect('/')
+            try:
+                userprofile = UserProfile.objects.get(user_id=current_user.id)
+                request.session['userimage'] = userprofile.image.url
+            except:
+                pass
+            # group = None
+            # if request.user.groups.exists():
+            #     group = request.user.groups.all()[0].name
+            
+            # if group == 'customer':
+            if current_user.is_staff == False:
+                return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/admin/')
         else:
             messages.warning(
                 request, "Login Error !! Username or Password is incorrect")
@@ -58,60 +57,6 @@ def login_form(request):
         'categories': categories
     }
     return render(request, 'user/login_form.html', context)
-
-
-# @login_required(login_url='/login')
-# def business_staff_view(request):
-#     if request.user.groups.exists():
-#         group = request.user.groups.all()[0].name
-
-#     if group == 'business_staff':
-#         return render(request, 'user/business_staff.html')
-#     else:
-#         return HttpResponse('You are not authorized to view this page')
-
-
-# @login_required(login_url='/login')
-# def sale_staff_view(request):
-#     if request.user.groups.exists():
-#         group = request.user.groups.all()[0].name
-
-#     if group == 'sale_staff':
-#         orders = Order.objects.all()
-#         users = UserProfile.objects.all()
-#         customers = []
-#         for u in users:
-#             if u.user.groups.exists():
-#                 if u.user.groups.all()[0].name == 'customer':
-#                     customers.append(u)
-
-#         total_customers = len(customers)
-#         for cu in customers:
-#             print(cu.user.first_name)
-#         total_orders = orders.count()
-#         delivered = orders.filter(status='Completed').count()
-#         pending = orders.filter(status='Preaparing').count()
-
-#         context = {'orders': orders, 'customers': customers,
-#                    'total_orders': total_orders, 'delivered': delivered,
-#                    'pending': pending}
-
-#         return render(request, 'accounts/dashboard.html', context)
-#         # return render(request, 'user/business_staff.html')
-#     else:
-#         return HttpResponse('You are not authorized to view this page')
-
-
-# @login_required(login_url='/login')
-# def warehouse_staff_view(request):
-#     if request.user.groups.exists():
-#         group = request.user.groups.all()[0].name
-
-#     if group == 'warehouse_staff':
-
-#         return render(request, 'user/warehouse_staff.html')
-#     else:
-#         return HttpResponse('You are not authorized to view this page')
 
 
 def logout_func(request):
@@ -272,3 +217,7 @@ def add_product(request):
         return HttpResponseRedirect('/signup')
     if request.methods == "POST":
         pass
+    
+    
+# if current_user.is_staff == True:
+#     return HttpResponse('You are not authorized to view this page')

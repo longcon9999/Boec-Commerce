@@ -7,15 +7,12 @@
             <div id="home-slick">
                 <!-- banner -->
                 <div class="banner banner-1">
-                    <img src="/static/img/1.png" alt="" style="height: 600px">
+                    <a href="{% url 'shoppage' %}">
+                    <img src="{% static 'img/1.jpg' %}" alt="" style="height: 600px"></a>
                 </div>
                 <div class="banner banner-1">
-                    <img src="/static/img/2.png" alt="" style="height: 600px">
+                    <img src="{% static 'img/bookspotlight.jpg' %}" alt="" style="height: 600px">
                 </div>
-                <!-- <div class="banner banner-1">
-                    <img src="/static/img/1.jpg" alt="" style="height: 600px">
-                </div> -->
-                <!-- /banner -->
             </div>
             <!-- /home slick -->
         </div>

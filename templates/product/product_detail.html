@@ -62,7 +62,9 @@
                     <div class="product-body">
                         <div class="product-label">
                             <span>New</span>
-                            <span class="sale">-20%</span>
+                            {% if product.promotion %}
+                            <span class="sale">-{{ product.promotion.percent | floatformat:'0'}}%</span>
+                            {% endif %}
                         </div>
                         <h2 class="product-name">{{ product.title }}</h2>
                         <div>
@@ -74,13 +76,13 @@
                                 <i class="fa fa-star{% if product.avaregereview < 5%}-o empty{% endif%}"></i>
                                 {{ product.avaregereview |stringformat:".2f"}}
                             </div>
-                                <a href="#tab1"> {{ product.countreview }} Review(s) / Add Review</a>
+                            <a href="#tab1"> {{ product.countreview }} Review(s) / Add Review</a>
                         </div>
 
                         <p><strong>Brand:</strong> E-SHOP</p>
                         <p>{{ product.description }}</p>
 
-                        
+
                         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"> </script>
 
                         <script>
@@ -105,26 +107,12 @@
                                     }
                                 });
                             });
-                            
-                                // var hash = document.location.hash;
-                                // if (hash) {
-                                //     $(".tab-nav a[href=\\" + hash + "]").tab('show');
-                                //      $(".tab-nav a[href=\\" + hash + "]").addClass('active');
-                                // }
-
-                                // // Change hash for page-reload
-                                // $('.go-to-review-tab').on('click', function (e) {
-                                //     console.log('Click')
-                                //     window.location.hash = e.target.hash;
-                                // });
-                            
                         </script>
 
 
                         <div class="product-btns">
                             <div class="row">
                                 {% if product.variant == 'Size-Color' %}
-
                                 <div class="product-options">
                                     <div class="size-option">
                                         <form method="POST" id="post-form">
@@ -154,7 +142,7 @@
                                                 <li {% if variant.id == rs.id %} class="active" {% endif %}>
                                                     <a
                                                         style="background-color:{{ rs.color.code }}; color: #D9D9D9; text-shadow: 1px 1px #000000; width: 90px">
-                                                         {{ rs.color }}
+                                                        {{ rs.color }}
                                                     </a>
                                                     <img src="{{ rs.image }}" style="height: 70px">
                                                 </li>
@@ -220,9 +208,13 @@
                                 <div id="SelectedProduct">
                                     <p><strong>Availability:</strong> {% if variant.quantity > 0  %} In Stock {% else %}
                                         Out of Stock {% endif %}</p>
-                                    <p><strong>Selected :</strong> Size : {{ variant.size }} Color : {{ variant.color }}
+                                    <p><strong>Selected :</strong> Size : {{ variant.size }} Color : {{variant.color}}
                                     </p>
-                                    <h3 class="product-price">${{ variant.price}}</h3>
+                                    {% if product.promotion %}
+                                        <h3 class="product-price">${{ variant.pricepromotion }}</h3>
+                                    {% else%}
+                                        <h3 class="product-price">${{ variant.price }}</h3>
+                                    {% endif %}
                                     <div class="qty-input">
                                         <span class="text-uppercase">QTY: </span>
                                         <input class="input" name="quantity" type="number" value="1" min="1"
@@ -240,7 +232,14 @@
                                 {% csrf_token %}
                                 <div id="SelectedProduct">
                                     <p><strong>Availability:</strong> {% if product.amount > 0  %} In Stock </p>
-                                    <h3 class="product-price">${{ product.price }}</h3>
+                                    <div>
+                                        {% if product.promotion %}
+                                        <h3 class="product-price">${{ product.pricepromotion }}</h3>
+                                        <h6 class="product-price"><del>${{ product.price }}</del></h6>
+                                        {% else %}
+                                        <h3 class="product-price">${{ product.price }}</h3>
+                                        {% endif %}
+                                    </div>
                                     <div class="qty-input">
                                         <span class="text-uppercase">QTY: </span>
                                         <input class="input" name="quantity" type="number" value="1" min="1"
@@ -251,7 +250,7 @@
                                         </button>
                                     </div>
                                     {% else %}
-                                <span> Out of Stock {% endif %}</span>
+                                    <span> Out of Stock {% endif %}</span>
                                 </div>
                             </form>
 
@@ -269,6 +268,54 @@
             </div>
             <div class="col-md-12">
                 <div class="product-tab">
+                    {% if suggests %}
+                    <ul class="tab-nav">
+                        <h4>Frequently bought together</h4>
+                        <table class="shopping-cart-table table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th style="width: 700px;"></th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-right"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for rs in suggests %}
+                                <tr>
+                                    <td class="thumb"><a href="{% url 'product_detail' rs.id rs.slug %}">
+                                            <img src="{{ rs.image.url }}" alt="" style="height: 100px">
+                                        </a></td>
+                                    <td class="details" style="display: flex;flex-direction: column;"> <a
+                                            href="{% url 'product_detail' rs.id rs.slug %}">{{ rs.title }}</a>
+                                            <div class="product-rating">
+                                                <div class="product-rating-stars">
+                                                    <i class="fa fa-star{% if rs.avaregereview < 1%}-o empty{% endif%}"></i>
+                                                    <i class="fa fa-star{% if rs.avaregereview < 2%}-o empty{% endif%}"></i>
+                                                    <i class="fa fa-star{% if rs.avaregereview < 3%}-o empty{% endif%}"></i>
+                                                    <i class="fa fa-star{% if rs.avaregereview < 4%}-o empty{% endif%}"></i>
+                                                    <i class="fa fa-star{% if rs.avaregereview < 5%}-o empty{% endif%}"></i>
+                                                </div>
+                                                {{ rs.avaregereview |stringformat:".2f"}}
+                                            </div>
+                                    </td>
+                                    {% if rs.variant == 'None' %}
+                                        <td class="price text-center"><strong>$ {{ rs.price }}</strong><br></td>
+                                        <td><a href="/order/addtoshopcart/{{ rs.id }}" class="primary-btn add-to-cart"><i
+                                                class="fa fa-shopping-cart"></i> Add to Cart</a>
+                                                </td>
+                                        {% else %}
+                                        <td></td>
+                                        <td>
+                                        <a href="{% url 'product_detail' rs.id rs.slug %}" class="primary-btn add-to-cart"><i
+                                                class="fa fa-shopping-cart"></i> Detail</a></td>
+                                        {% endif %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </ul>
+                    {% endif %}
                     <ul class="tab-nav">
                         <li class="active"><a data-toggle="tab" href="#tab1">Details</a></li>
                         <li><a data-toggle="tab" href="#tab2">Reviews ({{ product.countreview}} )</a></li>
@@ -276,7 +323,7 @@
                     <div class="tab-content">
                         <div id="tab1" class="tab-pane fade in active">
                             <p>
-                                {{ product.detail |safe }}
+                                {{ product.detail | safe }}
                             </p>
                         </div>
                         <div id="tab2" class="tab-pane fade in">
