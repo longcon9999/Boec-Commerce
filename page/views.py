@@ -20,8 +20,6 @@ def index(request):
     products_latest = products[:4]  # last 4 products
     products_slider = Product.objects.filter(status="True").order_by('id')[
         :4]  # first 4 products
-    # products_picked = Product.objects.filter(status="True").order_by(
-    #     '?')[:4]  # Random selected 4 products
     products_picked = []
     for i in products:
         if i.avaregereview() > 2:
@@ -29,15 +27,16 @@ def index(request):
     products_picked.sort(key=lambda x: x.avaregereview(), reverse=True)
     if len(products_picked) > 4:
         products_picked = products_picked[:4]
-    
+
     products_bought = []
     if request.user.id:
-        orderproducts = OrderProduct.objects.filter(user_id = request.user.id)
+        orderproducts = OrderProduct.objects.filter(user_id=request.user.id)
         product_id_temp = []
         for orderproduct in orderproducts:
             if orderproduct.product_id not in product_id_temp:
                 product_id_temp.append(orderproduct.product_id)
-                products_bought.append(Product.objects.get(pk=orderproduct.product_id))
+                products_bought.append(
+                    Product.objects.get(pk=orderproduct.product_id))
         shuffle(products_bought)
         if len(products_bought) > 4:
             products_bought = products_bought[:4]
@@ -167,17 +166,18 @@ def ajaxcolor(request):
             'components/color_list.html', context=context)}
         return JsonResponse(data)
     return JsonResponse(data)
-    
-    
+
+
 def shoppage(request):
     products = Product.objects.all().order_by('-update_at')
-    paginator = Paginator(products, 12) # Show 4 products per page
+    paginator = Paginator(products, 12)  # Show 4 products per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
         'page_obj': page_obj
     }
     return render(request, 'pages/shoppage.html', context)
+
 
 def suggest_pro(id):
     orders = Order.objects.all()
