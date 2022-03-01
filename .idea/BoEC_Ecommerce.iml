@@ -16,7 +16,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (Boec-Commerce)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
@@ -28,6 +28,7 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/venv/lib/python3.8/site-packages/django/forms/templates" />
+        <option value="$MODULE_DIR$/templates" />
       </list>
     </option>
   </component>
